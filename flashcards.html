@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards Câu 1-25</title>
+    <style>
+        :root {
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1e1b4b, #020617 60%);
+            color: #e2e8f0;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+        }
+
+        .hint {
+            text-align: center;
+            margin-bottom: 28px;
+            color: rgba(226, 232, 240, 0.8);
+        }
+
+        .flashcard {
+            position: relative;
+            max-width: 660px;
+            margin: 0 auto;
+            perspective: 1200px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            min-height: 600px;
+            padding: 28px;
+            border-radius: 28px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 25px 40px rgba(2, 6, 23, 0.9);
+            transition: transform 0.7s;
+            transform-style: preserve-3d;
+        }
+
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            inset: 0;
+            padding: 24px;
+            border-radius: 28px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .card-face.back {
+            transform: rotateY(180deg);
+            text-align: center;
+            background: rgba(248, 250, 252, 0.98);
+            color: #0f172a;
+        }
+
+        figure {
+            margin: 0;
+            text-align: center;
+        }
+
+        figure img {
+            width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+            border-radius: 18px;
+            background: #0f172a;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+        }
+
+        figcaption {
+            margin-top: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(226, 232, 240, 0.85);
+        }
+
+        .answer {
+            font-size: clamp(2.4rem, 8vw, 3.8rem);
+            font-weight: 700;
+        }
+
+        .answer-note {
+            font-size: 1.1rem;
+            color: rgba(15, 23, 42, 0.8);
+        }
+
+        .controls {
+            margin-top: 28px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .nav-btn {
+            background: rgba(59, 130, 246, 0.9);
+            color: #f8fafc;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .flip-btn {
+            background: rgba(248, 250, 252, 0.9);
+            color: #0f172a;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.3;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        button:not(:disabled):active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Flashcards Modul Testing – Câu 1&ndash;25</h1>
+        <p class="hint">Chỉ hiển thị một câu trên màn hình. Bấm “Lật thẻ” để xem đáp án, dùng &larr; &rarr; để chuyển câu.</p>
+
+        <section class="flashcard" aria-live="polite">
+            <div class="card-inner" id="card">
+                <div class="card-face front" id="front">
+                    <figure>
+                        <img id="question-image" src="" alt="">
+                        <figcaption id="question-label"></figcaption>
+                    </figure>
+                </div>
+                <div class="card-face back">
+                    <div class="answer-note">Đáp án đúng</div>
+                    <div class="answer" id="answer-text"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="controls">
+            <button class="nav-btn" id="prev">&larr; Câu trước</button>
+            <button class="flip-btn" id="flip">Lật thẻ</button>
+            <button class="nav-btn" id="next">Câu tiếp &rarr;</button>
+        </div>
+    </main>
+
+    <script>
+        const slides = [
+            { question: "Câu 1", answer: "D", image: "Q1.jpg" },
+            { question: "Câu 2", answer: "B", image: "Q2.jpg" },
+            { question: "Câu 3", answer: "B", image: "Q3.jpg" },
+            { question: "Câu 4", answer: "C", image: "Q4.jpg" },
+            { question: "Câu 5", answer: "A", image: "Q5.jpg" },
+            { question: "Câu 6", answer: "A", image: "Q6.jpg" },
+            { question: "Câu 7", answer: "A", image: "Q7.jpg" },
+            { question: "Câu 8", answer: "D", image: "Q8.jpg" },
+            { question: "Câu 9", answer: "A", image: "Q9.jpg" },
+            { question: "Câu 10", answer: "A", image: "Q10.jpg" },
+            { question: "Câu 11", answer: "B", image: "Q11.jpg" },
+            { question: "Câu 12", answer: "B", image: "Q12.jpg" },
+            { question: "Câu 13", answer: "C", image: "Q13.jpg" },
+            { question: "Câu 14", answer: "C", image: "Q14.jpg" },
+            { question: "Câu 15", answer: "C", image: "Q15.jpg" },
+            { question: "Câu 16", answer: "B", image: "Q16.jpg" },
+            { question: "Câu 17", answer: "D", image: "Q17.jpg" },
+            { question: "Câu 18", answer: "A", image: "Q18.jpg" },
+            { question: "Câu 19", answer: "C", image: "Q19.jpg" },
+            { question: "Câu 20", answer: "A", image: "Q20.jpg" },
+            { question: "Câu 21", answer: "C", image: "Q21.jpg" },
+            { question: "Câu 22", answer: "D", image: "Q22.jpg" },
+            { question: "Câu 23", answer: "B", image: "Q23.jpg" },
+            { question: "Câu 24", answer: "A", image: "Q24.jpg" },
+            { question: "Câu 25", answer: "B", image: "Q25.jpg" }
+        ];
+
+        const card = document.getElementById("card");
+        const img = document.getElementById("question-image");
+        const label = document.getElementById("question-label");
+        const answer = document.getElementById("answer-text");
+        const prevBtn = document.getElementById("prev");
+        const nextBtn = document.getElementById("next");
+        const flipBtn = document.getElementById("flip");
+
+        let index = 0;
+
+        const updateCard = () => {
+            const { question, answer: ans, image } = slides[index];
+            img.src = image;
+            img.alt = question;
+            label.textContent = question;
+            answer.textContent = ans;
+            card.classList.remove("flipped");
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        };
+
+        const preload = () => {
+            slides.forEach(({ image }) => {
+                const pic = new Image();
+                pic.src = image;
+            });
+        };
+
+        prevBtn.addEventListener("click", () => {
+            if (index > 0) {
+                index--;
+                updateCard();
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            if (index < slides.length - 1) {
+                index++;
+                updateCard();
+            }
+        });
+
+        const toggleFlip = () => card.classList.toggle("flipped");
+
+        flipBtn.addEventListener("click", toggleFlip);
+        card.addEventListener("click", (event) => {
+            // Avoid double-trigger when clicking buttons
+            if (!event.target.closest("button")) {
+                toggleFlip();
+            }
+        });
+
+        preload();
+        updateCard();
+    </script>
+</body>
+</html>
+
