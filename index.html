@@ -151,23 +151,11 @@
             box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
         }
 
-        .flip-btn {
-            background: rgba(248, 250, 252, 0.9);
-            color: #0f172a;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
-        }
-
         .shuffle-btn {
             background: rgba(248, 250, 252, 0.9);
             color: #0f172a;
             box-shadow: 0 10px 20px rgba(15, 23, 42, 0.35);
             border: 1px dashed rgba(15, 23, 42, 0.3);
-        }
-
-        .flip-btn {
-            background: rgba(248, 250, 252, 0.9);
-            color: #0f172a;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
         }
 
         button:disabled {
@@ -249,7 +237,6 @@
 
         <div class="controls">
             <button class="nav-btn mobile-only" id="prev-mobile">&larr; Câu trước</button>
-            <button class="flip-btn" id="flip">Lật thẻ</button>
             <button class="shuffle-btn" id="shuffle">Xáo trộn</button>
             <button class="nav-btn mobile-only" id="next-mobile">Câu tiếp &rarr;</button>
         </div>
@@ -327,7 +314,6 @@
         const nextBtn = document.getElementById("next");
         const prevMobile = document.getElementById("prev-mobile");
         const nextMobile = document.getElementById("next-mobile");
-        const flipBtn = document.getElementById("flip");
         const shuffleBtn = document.getElementById("shuffle");
 
         let index = 0;
@@ -381,8 +367,6 @@
         });
 
         const toggleFlip = () => card.classList.toggle("flipped");
-
-        flipBtn.addEventListener("click", toggleFlip);
 
         let suppressClick = false;
         card.addEventListener("click", (event) => {
