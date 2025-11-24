@@ -201,6 +201,18 @@
             .nav-side {
                 display: none;
             }
+
+            .controls {
+                flex-wrap: nowrap;
+                width: 100%;
+                gap: 8px;
+            }
+
+            .controls button {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 12px 10px;
+            }
         }
 
         .mobile-only {
@@ -218,7 +230,7 @@
     <main>
         <h1>SWT301 FA 25</h1>
         <section class="flashcard" aria-live="polite">
-            <button class="nav-side prev" id="prev" aria-label="Câu trước">&larr;</button>
+            <button class="nav-side prev" id="prev" aria-label="trước">&larr;</button>
             <div class="card-inner" id="card">
                 <div class="card-face front" id="front">
                     <figure>
@@ -232,13 +244,13 @@
                     <p class="answer-explain" id="answer-explain"></p>
                 </div>
             </div>
-            <button class="nav-side next" id="next" aria-label="Câu tiếp theo">&rarr;</button>
+            <button class="nav-side next" id="next" aria-label="tiếp theo">&rarr;</button>
         </section>
 
         <div class="controls">
-            <button class="nav-btn mobile-only" id="prev-mobile">&larr; Câu trước</button>
+            <button class="nav-btn mobile-only" id="prev-mobile">trước</button>
             <button class="shuffle-btn" id="shuffle">Xáo trộn</button>
-            <button class="nav-btn mobile-only" id="next-mobile">Câu tiếp &rarr;</button>
+            <button class="nav-btn mobile-only" id="next-mobile">tiếp</button>
         </div>
     </main>
 
