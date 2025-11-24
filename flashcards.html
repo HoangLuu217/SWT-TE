@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcards Câu 1-25</title>
+    <title>SWT301 FA 25 Flashcards</title>
     <style>
         :root {
             font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -14,12 +14,16 @@
             min-height: 100vh;
             background: radial-gradient(circle at top, #1e1b4b, #020617 60%);
             color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
         }
 
         main {
-            max-width: 960px;
+            width: min(100%, 1040px);
             margin: 0 auto;
-            padding: 32px 20px 48px;
+            text-align: center;
         }
 
         h1 {
@@ -35,16 +39,20 @@
         }
 
         .flashcard {
-            position: relative;
-            max-width: 660px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            max-width: 960px;
             margin: 0 auto;
             perspective: 1200px;
+            padding: 0 12px;
         }
 
         .card-inner {
             position: relative;
-            width: 100%;
-            min-height: 600px;
+            flex: 1 1 720px;
+            min-height: 560px;
             padding: 28px;
             border-radius: 28px;
             border: 1px solid rgba(148, 163, 184, 0.25);
@@ -80,11 +88,15 @@
         figure {
             margin: 0;
             text-align: center;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         figure img {
             width: 100%;
-            max-height: 480px;
+            max-height: 420px;
             object-fit: contain;
             border-radius: 18px;
             background: #0f172a;
@@ -106,6 +118,13 @@
         .answer-note {
             font-size: 1.1rem;
             color: rgba(15, 23, 42, 0.8);
+        }
+
+        .answer-explain {
+            margin-top: 12px;
+            font-size: 1.05rem;
+            color: rgba(15, 23, 42, 0.85);
+            line-height: 1.45;
         }
 
         .controls {
@@ -138,6 +157,19 @@
             box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
         }
 
+        .shuffle-btn {
+            background: rgba(248, 250, 252, 0.9);
+            color: #0f172a;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.35);
+            border: 1px dashed rgba(15, 23, 42, 0.3);
+        }
+
+        .flip-btn {
+            background: rgba(248, 250, 252, 0.9);
+            color: #0f172a;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
+        }
+
         button:disabled {
             opacity: 0.3;
             cursor: default;
@@ -147,14 +179,58 @@
         button:not(:disabled):active {
             transform: translateY(2px);
         }
+
+        .nav-side {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 0;
+            background: rgba(59, 130, 246, 0.9);
+            color: #f8fafc;
+            font-size: 1.5rem;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: 0 18px 35px rgba(37, 99, 235, 0.45);
+            flex-shrink: 0;
+        }
+
+        .nav-side:disabled {
+            opacity: 0.3;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 16px;
+            }
+
+            .flashcard {
+                padding: 0;
+            }
+
+            .nav-side {
+                display: none;
+            }
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 720px) {
+            .mobile-only {
+                display: inline-flex;
+            }
+        }
     </style>
 </head>
 <body>
     <main>
-        <h1>Flashcards Modul Testing – Câu 1&ndash;25</h1>
-        <p class="hint">Chỉ hiển thị một câu trên màn hình. Bấm “Lật thẻ” để xem đáp án, dùng &larr; &rarr; để chuyển câu.</p>
-
+        <h1>SWT301 FA 25</h1>
         <section class="flashcard" aria-live="polite">
+            <button class="nav-side prev" id="prev" aria-label="Câu trước">&larr;</button>
             <div class="card-inner" id="card">
                 <div class="card-face front" id="front">
                     <figure>
@@ -165,62 +241,105 @@
                 <div class="card-face back">
                     <div class="answer-note">Đáp án đúng</div>
                     <div class="answer" id="answer-text"></div>
+                    <p class="answer-explain" id="answer-explain"></p>
                 </div>
             </div>
+            <button class="nav-side next" id="next" aria-label="Câu tiếp theo">&rarr;</button>
         </section>
 
         <div class="controls">
-            <button class="nav-btn" id="prev">&larr; Câu trước</button>
+            <button class="nav-btn mobile-only" id="prev-mobile">&larr; Câu trước</button>
             <button class="flip-btn" id="flip">Lật thẻ</button>
-            <button class="nav-btn" id="next">Câu tiếp &rarr;</button>
+            <button class="shuffle-btn" id="shuffle">Xáo trộn</button>
+            <button class="nav-btn mobile-only" id="next-mobile">Câu tiếp &rarr;</button>
         </div>
     </main>
 
     <script>
         const slides = [
-            { question: "Câu 1", answer: "D", image: "Q1.jpg" },
-            { question: "Câu 2", answer: "B", image: "Q2.jpg" },
-            { question: "Câu 3", answer: "B", image: "Q3.jpg" },
-            { question: "Câu 4", answer: "C", image: "Q4.jpg" },
-            { question: "Câu 5", answer: "A", image: "Q5.jpg" },
-            { question: "Câu 6", answer: "A", image: "Q6.jpg" },
-            { question: "Câu 7", answer: "A", image: "Q7.jpg" },
-            { question: "Câu 8", answer: "D", image: "Q8.jpg" },
-            { question: "Câu 9", answer: "A", image: "Q9.jpg" },
-            { question: "Câu 10", answer: "A", image: "Q10.jpg" },
-            { question: "Câu 11", answer: "B", image: "Q11.jpg" },
-            { question: "Câu 12", answer: "B", image: "Q12.jpg" },
-            { question: "Câu 13", answer: "C", image: "Q13.jpg" },
-            { question: "Câu 14", answer: "C", image: "Q14.jpg" },
-            { question: "Câu 15", answer: "C", image: "Q15.jpg" },
-            { question: "Câu 16", answer: "B", image: "Q16.jpg" },
-            { question: "Câu 17", answer: "D", image: "Q17.jpg" },
-            { question: "Câu 18", answer: "A", image: "Q18.jpg" },
-            { question: "Câu 19", answer: "C", image: "Q19.jpg" },
-            { question: "Câu 20", answer: "A", image: "Q20.jpg" },
-            { question: "Câu 21", answer: "C", image: "Q21.jpg" },
-            { question: "Câu 22", answer: "D", image: "Q22.jpg" },
-            { question: "Câu 23", answer: "B", image: "Q23.jpg" },
-            { question: "Câu 24", answer: "A", image: "Q24.jpg" },
-            { question: "Câu 25", answer: "B", image: "Q25.jpg" }
+            { question: "Câu 1", answer: "D. Debugging defects", image: "Q1.jpg" },
+            { question: "Câu 2", answer: "B. Scribe", image: "Q2.jpg" },
+            { question: "Câu 3", answer: "B. Unused Branches", image: "Q3.jpg" },
+            { question: "Câu 4", answer: "C. Depends on risk, contract, requirements", image: "Q4.jpg" },
+            { question: "Câu 5", answer: "A. Eliminate some requirements", image: "Q5.jpg" },
+            { question: "Câu 6", answer: "A. Error guessing", image: "Q6.jpg" },
+            { question: "Câu 7", answer: "A. Needs configuration management", image: "Q7.jpg" },
+            { question: "Câu 8", answer: "D. Statement coverage is 2", image: "Q8.jpg" },
+            { question: "Câu 9", answer: "A. Use of automated test execution tools", image: "Q9.jpg" },
+            { question: "Câu 10", answer: "A. Generating expected outputs", image: "Q10.jpg" },
+            { question: "Câu 11", answer: "B. i, ii, iii correct; iv incorrect", image: "Q11.jpg" },
+            { question: "Câu 12", answer: "B. False", image: "Q12.jpg" },
+            { question: "Câu 13", answer: "C. Important non-functional requirement missing", image: "Q13.jpg" },
+            { question: "Câu 14", answer: "C. None, existing tests can be used", image: "Q14.jpg" },
+            { question: "Câu 15", answer: "C. Avoids author bias", image: "Q15.jpg" },
+            { question: "Câu 16", answer: "B. i, iii, iv true; ii false", image: "Q16.jpg" },
+            { question: "Câu 17", answer: "D. Debugging", image: "Q17.jpg" },
+            { question: "Câu 18", answer: "A. True", image: "Q18.jpg" },
+            { question: "Câu 19", answer: "C. A failure", image: "Q19.jpg" },
+            { question: "Câu 20", answer: "A. 15, 19, 25", image: "Q20.jpg" },
+            { question: "Câu 21", answer: "C. Regression Testing", image: "Q21.jpg" },
+            { question: "Câu 22", answer: "D. All of them are true", image: "Q22.jpg" },
+            { question: "Câu 23", answer: "B. Acceptance testing", image: "Q23.jpg" },
+            { question: "Câu 24", answer: "A. i-d, ii-a, iii-c, iv-b", image: "Q24.jpg" },
+            { question: "Câu 25", answer: "B. Test Analysis and Design", image: "Q25.jpg" },
+            { question: "Câu 26", answer: "D", image: "Q26.jpg", explain: "CLa01ss chứa ký tự số (0,1) nên không thuộc lớp hợp lệ chỉ gồm chữ cái." },
+            { question: "Câu 27", answer: "D", image: "Q27.jpg", explain: "Measurement dysfunction xảy ra do tất cả các nguyên nhân A, B, C đều đúng." },
+            { question: "Câu 28", answer: "B", image: "Q28.jpg", explain: "Black-box tester không cần hiểu mã nguồn; đọc code thuộc về white-box testing." },
+            { question: "Câu 29", answer: "B. Regression testing", image: "Q29.jpg" },
+            { question: "Câu 30", answer: "B. Requirements management tools", image: "Q30.jpg" },
+            { question: "Câu 31", answer: "B. Coverage & dynamic analysis tools", image: "Q31.jpg", explain: "Developers chủ yếu dùng coverage measurement và dynamic analysis tools (ii, iv)." },
+            { question: "Câu 32", answer: "C. Boo01k", image: "Q32.jpg", explain: "ISTQB chọn lớp hợp lệ chứa cả chữ lẫn số." },
+            { question: "Câu 33", answer: "A. Integration testing in the large", image: "Q33.jpg" },
+            { question: "Câu 34", answer: "D. Simulating many users", image: "Q34.jpg", explain: "Nhà thầu ban đầu viết script mô phỏng nhiều người dùng." },
+            { question: "Câu 35", answer: "A. Code inspection", image: "Q35.jpg" },
+            { question: "Câu 36", answer: "E. Static analysis tool", image: "Q36.jpg" },
+            { question: "Câu 37", answer: "C. Define exit criteria purpose", image: "Q37.jpg" },
+            { question: "Câu 38", answer: "A. Incorrect behavior", image: "Q38.jpg" },
+            { question: "Câu 39", answer: "A. Test Analysis and Design", image: "Q39.jpg" },
+            { question: "Câu 40", answer: "D. Test management tool", image: "Q40.jpg" },
+            { question: "Câu 41", answer: "D. Exhaustive testing", image: "Q41.jpg" },
+            { question: "Câu 42", answer: "C. Analyze needs and requirements", image: "Q42.jpg" },
+            { question: "Câu 43", answer: "A. Scenario / dry-run / peer review", image: "Q43.jpg" },
+            { question: "Câu 44", answer: "C. Statement about static analysis true", image: "Q44.jpg" },
+            { question: "Câu 45", answer: "A. Planning phase activities", image: "Q45.jpg", explain: "Trong planning phase của formal review, các nhiệm vụ A+B hợp lệ nên đáp án A." },
+            { question: "Câu 46", answer: "A. Test planning", image: "Q46.jpg", explain: "Xác định exit criteria thuộc giai đoạn lập kế hoạch kiểm thử." },
+            { question: "Câu 47", answer: "B. Recovery testing", image: "Q47.jpg", explain: "Capture & replay ít dùng nhất cho recovery testing." },
+            { question: "Câu 48", answer: "D. 70%", image: "Q48.jpg" },
+            { question: "Câu 49", answer: "B. Assistant manager", image: "Q49.jpg", explain: "Formal review không yêu cầu assistant manager." },
+            { question: "Câu 50", answer: "A. Small pilot team", image: "Q50.jpg" },
+            { question: "Câu 51", answer: "A. All listed issues", image: "Q51.jpg" },
+            { question: "Câu 52", answer: "C. Alpha testing", image: "Q52.jpg" },
+            { question: "Câu 53", answer: "B. Auditing ISO9001 compliance", image: "Q53.jpg" },
+            { question: "Câu 54", answer: "B. Risk-based testing", image: "Q54.jpg" },
+            { question: "Câu 55", answer: "B. Big-bang", image: "Q55.jpg" },
+            { question: "Câu 56", answer: "A. Execute most important tests first", image: "Q56.jpg" },
+            { question: "Câu 57", answer: "A. Correcting defects inside review", image: "Q57.jpg", explain: "Review chỉ phát hiện lỗi, không sửa trong phiên." },
+            { question: "Câu 58", answer: "A. Inspection", image: "Q58.jpg" },
+            { question: "Câu 59", answer: "A. Schedule test analysis & design tasks", image: "Q59.jpg" }
         ];
 
         const card = document.getElementById("card");
         const img = document.getElementById("question-image");
         const label = document.getElementById("question-label");
         const answer = document.getElementById("answer-text");
+        const explain = document.getElementById("answer-explain");
         const prevBtn = document.getElementById("prev");
         const nextBtn = document.getElementById("next");
+        const prevMobile = document.getElementById("prev-mobile");
+        const nextMobile = document.getElementById("next-mobile");
         const flipBtn = document.getElementById("flip");
+        const shuffleBtn = document.getElementById("shuffle");
 
         let index = 0;
 
         const updateCard = () => {
-            const { question, answer: ans, image } = slides[index];
+            const { question, answer: ans, image, explain: note = "" } = slides[index];
             img.src = image;
             img.alt = question;
             label.textContent = question;
             answer.textContent = ans;
+            explain.textContent = note;
+            explain.style.display = note ? "block" : "none";
             card.classList.remove("flipped");
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === slides.length - 1;
@@ -233,29 +352,96 @@
             });
         };
 
-        prevBtn.addEventListener("click", () => {
+        const goPrev = () => {
             if (index > 0) {
                 index--;
                 updateCard();
             }
-        });
+        };
 
-        nextBtn.addEventListener("click", () => {
+        const goNext = () => {
             if (index < slides.length - 1) {
                 index++;
                 updateCard();
             }
+        };
+
+        prevBtn.addEventListener("click", goPrev);
+        nextBtn.addEventListener("click", goNext);
+        prevMobile?.addEventListener("click", goPrev);
+        nextMobile?.addEventListener("click", goNext);
+
+        shuffleBtn.addEventListener("click", () => {
+            for (let i = slides.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [slides[i], slides[j]] = [slides[j], slides[i]];
+            }
+            index = 0;
+            updateCard();
         });
 
         const toggleFlip = () => card.classList.toggle("flipped");
 
         flipBtn.addEventListener("click", toggleFlip);
+
+        let suppressClick = false;
         card.addEventListener("click", (event) => {
-            // Avoid double-trigger when clicking buttons
+            if (suppressClick) {
+                suppressClick = false;
+                return;
+            }
             if (!event.target.closest("button")) {
                 toggleFlip();
             }
         });
+
+        let pointerActive = false;
+        let startX = 0;
+        let startY = 0;
+        let isSwiping = false;
+
+        const resetPointer = () => {
+            pointerActive = false;
+            startX = 0;
+            startY = 0;
+            isSwiping = false;
+        };
+
+        card.addEventListener("pointerdown", (event) => {
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            pointerActive = true;
+            startX = event.clientX;
+            startY = event.clientY;
+            isSwiping = false;
+            card.setPointerCapture?.(event.pointerId);
+        });
+
+        card.addEventListener("pointermove", (event) => {
+            if (!pointerActive) return;
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+            if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy)) {
+                isSwiping = true;
+            }
+        });
+
+        const handlePointerEnd = (event) => {
+            if (!pointerActive) return;
+            if (isSwiping) {
+                const dx = event.clientX - startX;
+                if (dx > 80) {
+                    goPrev();
+                    suppressClick = true;
+                } else if (dx < -80) {
+                    goNext();
+                    suppressClick = true;
+                }
+            }
+            resetPointer();
+        };
+
+        card.addEventListener("pointerup", handlePointerEnd);
+        card.addEventListener("pointercancel", resetPointer);
 
         preload();
         updateCard();
